@@ -14,6 +14,15 @@ local material = {
 	orange   =		'#F78C6C',
 	pink     =  	'#FF9CAC',
 
+	-- Dark colors
+	darkred =		'#dc6068',
+	darkgreen =		'#abcf76',
+	darkyellow =	'#e6b455',
+	darkblue =		'#6e98eb',
+	darkcyan =		'#71c6e7',
+	darkpurple =	'#b480d6',
+	darkorange =	'#e2795b',
+
 	error    =		'#FF5370',
 	link     =		'#80CBC4',
 	cursor   =		'#FFCC00',
@@ -26,19 +35,27 @@ local material = {
 if vim.g.material_style == 'darker' then
 	-- Darker theme style
 
-	material.bg =			'#212121'
-	material.bg_alt =		'#1A1A1A'
-	material.fg =			'#B0BEC5'
-	material.text =			'#727272'
-	material.comments =		'#616161'
-	material.selection = 	'#404040'
-	material.contrast =		'#1A1A1A'
-	material.active =		'#323232'
-	material.border =		'#292929'
-	material.line_numbers =	'#424242'
-	material.highlight =	'#3F3F3F'
-	material.disabled =		'#474747'
-	material.accent =		'#FF9800'
+    material.bg =			'#212121'
+    material.bg_alt =		'#1A1A1A'
+    material.fg =			'#B0BEC5'
+    material.text =			'#727272'
+    material.comments =		'#616161'
+    material.selection = 	'#404040'
+    material.contrast =		'#1A1A1A'
+    material.active =		'#323232'
+    material.border =		'#292929'
+    material.line_numbers =	'#424242'
+    material.highlight =	'#3F3F3F'
+    material.disabled =		'#474747'
+    material.accent =		'#FF9800'
+
+    if vim.g.material_darker_contrast == true then
+        -- Lighter theme style with high contrast
+
+        material.comments =		'#757575'
+        material.line_numbers =	'#5C5C5C'
+
+    end
 
 elseif vim.g.material_style == 'lighter' then
 
@@ -147,8 +164,8 @@ else vim.g.material_style = 'oceanic'
 	material.bg_alt =		'#192227'
 	material.fg =			'#B0BEC5'
 	material.text =			'#607D8B'
-	material.comments =		'#464B5D'
-	material.selection = 	'#546E7A'
+	material.comments =		'#546E7A'
+	material.selection = 	'#464B5D'
 	material.contrast =		'#1E272C'
 	material.active =		'#314549'
 	material.border =		'#2A373E'
@@ -182,6 +199,31 @@ if vim.g.material_style == 'lighter' then
     material.title = material.black
 else
     material.title = material.white
+end
+
+-- Apply user defined colors
+
+-- Check if vim.g.material_custom_colors = is a table
+if type(vim.g.material_custom_colors) == "table" then
+	-- Iterate trough the table
+	for key, value in pairs(vim.g.material_custom_colors) do
+		-- If the key doesn't exist:
+		if not material[key] then
+			error("Color " .. key .. " does not exist")
+		end
+		-- If it exists and the sting starts with a "#"
+		if string.sub(value, 1, 1) == "#" then
+			-- Hex override
+			material[key] = value
+		-- IF it doesn't, dont accept it
+		else
+			-- Another group
+			if not material[value] then
+			  error("Color " .. value .. " does not exist")
+			end
+			material[key] = material[value]
+		end
+	end
 end
 
 return material
